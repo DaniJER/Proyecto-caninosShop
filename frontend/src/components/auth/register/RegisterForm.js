@@ -2,13 +2,17 @@
 
 import clsx from 'clsx'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 
 export const RegisterForm = () => {
 
     const {register,handleSubmit, formState:{errors,isSubmitting}, reset} = useForm()
     const [passwordError, setPasswordError] = useState('')
+
+    const router = useRouter();
 
     const onSubmit = async (data)=>{
       
@@ -28,17 +32,28 @@ export const RegisterForm = () => {
             return setPasswordError('Las contraseñas no coinciden')
         }
 
-        console.log({...data})
+        try {
 
-        // todo: enviar formulario al backend
+            // todo: enviar formulario al backend
+            await new Promise(resolve => setTimeout(resolve, 2000)); // simulador
+    
+            // todo: respuesta positiva del backend redirigir al inicio mostra notificacion registro exitoso
+            toast.success('Registro exitoso!');
 
-        // todo: respuesta positiva del backend redirigir al inicio mostra notificacion registro exitoso
+            router.replace('/') 
 
-        // todo: respuestas negativas del backend manejarlas
+            // todo: respuestas negativas del backend manejarlas
+            
+            setPasswordError('');
+            reset();
 
-        alert('se registro exitosamente') // todo: cambiar por notificacion (toast)
-        setPasswordError('');
-        reset();
+            console.log({...data})
+                
+        } catch (error) {
+            console.error(error)
+        }
+
+
     }
 
 
