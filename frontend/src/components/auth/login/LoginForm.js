@@ -9,6 +9,8 @@ import { TbLock } from "react-icons/tb";
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useForm } from 'react-hook-form';
 import clsx from 'clsx';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 
 export const LoginForm = () => {
@@ -21,39 +23,50 @@ export const LoginForm = () => {
 
     const {register,handleSubmit, formState:{errors,isSubmitting}, reset} = useForm()
 
+    const router = useRouter();
 
     const toggleShowPassword = ()=>{
         setShowPassword(!showPassword)
     }
 
-    const onSubmit = async (data) => {
+    const onSubmit = async (data) => {  
         const {email , password } = data;
 
         if (!captchaValue) {
           return setCaptchaError('Verifica que no eres un robot'); 
         }
 
-        // todo: pedir accedo al backend
-        if (email !== 'prueba@gmail.com' || password !== '123456') {
-          setLoginError('Correo y/o contraseña inválidos.');
-          return;
-        } 
+        try {
 
-        // todo: dependiendo de la respuesta cambiar de ruta 
-        // todo: notificar al usuario el acceso toast
-        // todo: resetear formulario
+          await new Promise(resolve => setTimeout(resolve, 2000)); // simulador
 
-
-        console.log({ email, password, captchaValue });
-        reset()
-        setCaptchaValue(null)
-        setCaptchaError('')
-        setLoginError('')
-
-        if (recaptchaRef.current) {
-          recaptchaRef.current.reset();
+          // todo: pedir accedo al backend
+          if (email !== 'prueba@gmail.com' || password !== '123456') {
+            setLoginError('Correo y/o contraseña inválidos.');
+            return;
+          } 
+  
+          // todo: notificar al usuario el acceso toast
+          toast.success('Inicio de sesion exitoso!');
+          
+          // todo: dependiendo de la respuesta cambiar de ruta
+          router.replace('/') 
+          
+          // todo: resetear formulario
+          reset()
+          setCaptchaValue(null)
+          setCaptchaError('')
+          setLoginError('')
+  
+          if (recaptchaRef.current) {
+            recaptchaRef.current.reset();
+          }
+  
+          console.log({ email, password, captchaValue });  
+          
+        } catch (error) {
+          console.error(error)
         }
-
     }
 
   return (
