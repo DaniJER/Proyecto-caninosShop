@@ -141,7 +141,7 @@ export const LoginForm = () => {
           Registrarme
         </Link>
         <Link
-          href="#" 
+          href="/auth/restore" 
           className=' text-blue-600 rounded-xl p-2 text-center font-medium '
           >
           ¿Olvidaste tu contraseña?
