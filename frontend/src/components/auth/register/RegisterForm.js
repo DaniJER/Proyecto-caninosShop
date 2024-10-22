@@ -40,10 +40,10 @@ export const RegisterForm = () => {
             // todo: respuesta positiva del backend redirigir al inicio mostra notificacion registro exitoso
             toast.success('Registro exitoso!');
 
-            router.replace('/') 
+            router.replace('/dashboard')  
 
             // todo: respuestas negativas del backend manejarlas
-            
+
             setPasswordError('');
             reset();
 

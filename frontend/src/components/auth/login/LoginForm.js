@@ -50,7 +50,7 @@ export const LoginForm = () => {
           toast.success('Inicio de sesion exitoso!');
           
           // todo: dependiendo de la respuesta cambiar de ruta
-          router.replace('/') 
+          router.replace('/dashboard') 
           
           // todo: resetear formulario
           reset()
