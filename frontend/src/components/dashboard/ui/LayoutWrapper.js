@@ -1,7 +1,7 @@
 'use client'
 
 import { Box } from '@mui/material';
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import styled from '@emotion/styled';
@@ -20,10 +20,20 @@ const Main = styled('div')(({ theme }) => ({
   }));
 
 const LayoutWrapper = ({children}) => {
+
+    const [drawerWidth, setDrawerWidth] = useState(300); 
+  
+
+    const toggleDrawerWidth = () => {
+        setDrawerWidth((prevWidth) => (prevWidth === 280 ? 88 : 280)); 
+    };
+
+    const [open, setOpen] = useState(false)
+
   return (
     <Box display={'flex'}>
-        <Navbar/>
-        <Sidebar/>
+        <Navbar  draweWidth={drawerWidth} onOpenNav={() => setOpen(true)} />
+        <Sidebar draweWidth={drawerWidth} openNav={open} onCloseNav={() => setOpen(false)}  onToggleDrawerWidth={toggleDrawerWidth}/>
         <Main>
             {
                 children
