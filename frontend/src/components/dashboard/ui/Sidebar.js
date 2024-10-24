@@ -5,6 +5,9 @@ import useResponsive from '../hooks/useResponsive'
 import Image from 'next/image'
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import styled from '@emotion/styled'
+import ScrollBar from './scrollbar/ScrollBar'
+import NavSetion from './sidebar-setions/NavSetion'
+import navConfig from './sidebar-setions/config'
 
 const StyledAccount = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -28,6 +31,7 @@ const Sidebar = ({draweWidth, openNav, onCloseNav, onToggleDrawerWidth}) => {
                 borderBottom:2,
                 borderColor: 'divider',
                 height:70,
+                minHeight:'70px !important'
             }}>
                 <Typography  noWrap component={'div'} >
                     <Image
@@ -78,6 +82,10 @@ const Sidebar = ({draweWidth, openNav, onCloseNav, onToggleDrawerWidth}) => {
                 </StyledAccount>
                 </Link>
             </Box>
+
+            <ScrollBar>
+                <NavSetion data={navConfig} draweWidth={draweWidth}/>
+            </ScrollBar>
         </>
     )
 
