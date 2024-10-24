@@ -1,6 +1,9 @@
-import { AppBar, Box, IconButton, Toolbar } from '@mui/material'
+import { AppBar, Box, Grid, IconButton, Toolbar } from '@mui/material'
 import React from 'react'
 import { CgMenuLeft } from "react-icons/cg";
+import Account from './header/Account';
+import { IoSearchOutline } from "react-icons/io5";
+import Link from 'next/link';
 
 const Navbar = ({draweWidth, onOpenNav }) => {
   return (
@@ -23,9 +26,23 @@ const Navbar = ({draweWidth, onOpenNav }) => {
                 <CgMenuLeft/>
                 
             </IconButton>
-            <Box>
-                Navbar
-            </Box>
+            <Grid 
+                container
+                direction={'row'}
+                justifyContent={'space-between'}
+                alignItems={'center'}
+            >
+                 <IoSearchOutline  size={24}/>
+                 
+                <Grid
+                  sx={{display:'flex', alignItems:'center', gap:'8px'}}
+                >
+                
+                <Account/>
+                
+                </Grid>
+                
+            </Grid>
         </Toolbar>
             
         </AppBar>
