@@ -41,7 +41,7 @@ const Account = () => {
             
             >
                 <Avatar 
-                    sx={{ height:30, width:30,
+                    sx={{ height:35, width:35,
                         ...(open && {
             '&:before': {
               zIndex: 0,
