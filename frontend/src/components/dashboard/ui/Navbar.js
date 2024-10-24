@@ -3,7 +3,6 @@ import React from 'react'
 import { CgMenuLeft } from "react-icons/cg";
 import Account from './header/Account';
 import { IoSearchOutline } from "react-icons/io5";
-import Link from 'next/link';
 
 const Navbar = ({draweWidth, onOpenNav }) => {
   return (
@@ -12,7 +11,7 @@ const Navbar = ({draweWidth, onOpenNav }) => {
             position="fixed"
             sx={{
                 width: { lg: `calc(100% - ${draweWidth}px)` },
-                ml:{sm:`${draweWidth}px`}, backgroundColor:'rgba(56, 189, 248, 0.8)', backdropFilter:'blur(6px)'
+                ml:{sm:`${draweWidth}px`}, backgroundColor:'rgba(56, 189, 248, 0.8)', backdropFilter:'blur(6px)',
                 }}
                 
         >
@@ -31,6 +30,7 @@ const Navbar = ({draweWidth, onOpenNav }) => {
                 direction={'row'}
                 justifyContent={'space-between'}
                 alignItems={'center'}
+                height={70}
             >
                  <IoSearchOutline  size={24}/>
                  
