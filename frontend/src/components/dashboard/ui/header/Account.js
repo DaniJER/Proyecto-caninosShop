@@ -2,22 +2,25 @@
 
 import { Avatar, Box, Divider, IconButton, MenuItem, Popover, Stack, Typography, alpha } from '@mui/material';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
 
 
 const menuItems = [
     { name: 'Inicio',  route: '/dashboard' },
-    { name: 'Perfil',  route: '/dashboard/perfil' },
-    { name: 'Ajustes', route: '/dashboard/ajustes' },
+    { name: 'Perfil',  route: '/dashboard/profile' },
+    { name: 'Ajustes', route: '/dashboard/settings' },
 ];
 
 
 const Account = () => {
 
     const [open, setOpen] = useState(null);
+    const pathname = usePathname();
 
 
     const onLogout = ()=>{
+        // todo: cerrar la session del usuario
         return
     }
     
@@ -43,16 +46,16 @@ const Account = () => {
                 <Avatar 
                     sx={{ height:35, width:35,
                         ...(open && {
-            '&:before': {
-              zIndex: 0,
-              content: "''",
-              width: '100%',
-              height: '100%',
-              borderRadius: '50%',
-              position: 'absolute',
-              bgcolor: (theme) => alpha(theme.palette.grey[600], 0.8),
-            },
-          })
+                    '&:before': {
+                    zIndex: 0,
+                    content: "''",
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '50%',
+                    position: 'absolute',
+                    bgcolor: (theme) => alpha(theme.palette.grey[600], 0.8),
+                        },
+                    })
                     }} 
                     alt="Cindy Baker" 
                     src="https://inversionesdiomardisas.vercel.app/assets/images/avatars/avatar_default.jpg"
@@ -109,7 +112,13 @@ const Account = () => {
         <Stack sx={{ p: 1 }}>{
             menuItems?.map(({name , route})=>(
                 <Link key={name} href={route}>
-                <MenuItem  onClick={handleClose} >
+                <MenuItem  onClick={handleClose} sx={{
+                    ...(route === pathname && {
+                        color:'black',
+                        bgcolor: 'action.selected',
+                        fontWeight:'500 !important'
+                    }),
+                }} >
                     <Typography variant='span'> {name}</Typography>
                 </MenuItem>
             </Link>
