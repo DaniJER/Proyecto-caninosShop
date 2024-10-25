@@ -12,23 +12,23 @@ const navConfig = [
     },
     {
       title: 'Usuarios',
-      path: '/dashboard/user',
+      path: '/dashboard/users',
       icon: <HiOutlineUserGroup size={20}/>,
     },
     {
       title: 'Clientes',
-      path: '/dashboard/products',
+      path: '/dashboard/customers',
       icon: <LiaUserTieSolid size={20}/>
       ,
     },
     {
       title: 'Mascotas',
-      path: '/dashboard/blog',
+      path: '/dashboard/pets',
       icon: <TbDog size={20}/>,
     },
     {
       title: 'Reportes',
-      path: '/dashboard/analytics',
+      path: '/dashboard/reports',
       icon:<TbFileAnalytics size={20}/>,
     },
     

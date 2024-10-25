@@ -1,6 +1,6 @@
 'use client'
 import { alpha, Avatar, Box, Drawer, IconButton, Link, Toolbar, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import useResponsive from '../hooks/useResponsive'
 import Image from 'next/image'
 import { IoIosCloseCircleOutline } from "react-icons/io";
@@ -8,6 +8,7 @@ import styled from '@emotion/styled'
 import ScrollBar from './scrollbar/ScrollBar'
 import NavSetion from './sidebar-setions/NavSetion'
 import navConfig from './sidebar-setions/config'
+import { usePathname } from 'next/navigation'
 
 const StyledAccount = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -21,6 +22,13 @@ const StyledAccount = styled('div')(({ theme }) => ({
 const Sidebar = ({draweWidth, openNav, onCloseNav, onToggleDrawerWidth}) => {
 
     const isDesktop = useResponsive('up','lg');
+    const pathname = usePathname();
+
+    useEffect(() => {
+        if(openNav){
+            onCloseNav()
+        }
+    }, [pathname]);
 
     const content = (
         <>
