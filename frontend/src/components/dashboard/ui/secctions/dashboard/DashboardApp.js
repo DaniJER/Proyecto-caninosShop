@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid2';
 import styled from '@emotion/styled';
 import AppWelcome from './AppWelcome';
 import AppSlider from './AppSlider';
+import AppStatistics from './AppStatistics';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -24,14 +25,47 @@ export const DashboardApp = () => {
         <>
         <Container maxWidth="xl">
             <Grid container spacing={2}>
-            <Grid size={{ xs: 12, md: 8 }}>
-              <AppWelcome/>
+
+              <Grid size={{ xs: 12, md: 8 }}>
+                <AppWelcome/>
+              </Grid>
+
+              <Grid size={{ xs: 12, md: 4 }}>
+                <AppSlider/>
+              </Grid>
+
+              <Grid size={{ xs: 12, md: 4 }} >
+                <AppStatistics
+                  title={'Total de ventas'}
+                  porcentaje={'+2.6%'}
+                  valores={'$10,000,000'}
+                  charDate={[5,18,12,51,68,11,39,37]}
+                  colorColumn={'rgb(66, 153, 225)'}
+                />
+              </Grid>
+
+              <Grid size={{ xs: 12, md: 4 }} >
+                <AppStatistics
+                  title={'Total de mascotas'}
+                  porcentaje={'+0.2 %'}
+                  valores={'100'}
+                  charDate={[5,18,12,51,68,11,39,37]}
+                  colorColumn={'#00B8D9'}
+                />
+              </Grid>
+
+              <Grid size={{ xs: 12, md: 4 }} >
+                <AppStatistics
+                  title={'Total de usuarios'}
+                  porcentaje={'-0.1%'}
+                  valores={'110'}
+                  charDate={[5,18,12,51,68,11,39,37]}
+                  colorColumn={'#FF5630'}
+                />
+              </Grid>
+
             </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <AppSlider/>
-            </Grid>
-          </Grid>
-          </Container>
+        </Container>
         </>
     );
 }
