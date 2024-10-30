@@ -4,6 +4,7 @@ import React from 'react';
 import Grid from '@mui/material/Grid2';
 import styled from '@emotion/styled';
 import AppWelcome from './AppWelcome';
+import AppSlider from './AppSlider';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -27,7 +28,7 @@ export const DashboardApp = () => {
               <AppWelcome/>
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
-              <Item>Slider</Item>
+              <AppSlider/>
             </Grid>
           </Grid>
           </Container>
