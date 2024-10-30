@@ -1,5 +1,7 @@
 // ----------------------------------------------------------------------
 
+import { quicksand } from "@/font";
+
 export function remToPx(value) {
     return Math.round(parseFloat(value) * 16);
   }
@@ -24,7 +26,7 @@ export function remToPx(value) {
   
   // ----------------------------------------------------------------------
   
-  const FONT_PRIMARY = 'Quicksand, sans-serif'; 
+  const FONT_PRIMARY = quicksand; 
   
   
   const typography = {
