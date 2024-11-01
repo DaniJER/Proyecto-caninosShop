@@ -1,11 +1,12 @@
 'use client'
-import {Box, Container, Grid2, Paper, Typography } from '@mui/material';
+import {Box, Container, Grid2, Paper, Typography, useTheme } from '@mui/material';
 import React from 'react';
 import Grid from '@mui/material/Grid2';
 import styled from '@emotion/styled';
 import AppWelcome from './AppWelcome';
 import AppSlider from './AppSlider';
 import AppStatistics from './AppStatistics';
+import AppPreferenceRace from './AppPreferenceRace';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -20,6 +21,8 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 export const DashboardApp = () => {
+
+  const theme = useTheme();
 
     return (
         <>
@@ -63,6 +66,26 @@ export const DashboardApp = () => {
                   colorColumn={'#FF5630'}
                 />
               </Grid>
+
+              <Grid2 size={{ xs: 12, md: 4 }}>
+                <AppPreferenceRace 
+                  title="Razas mas vendidas"
+                  chartData={[
+                    { label: 'Golden Retriever', value: 100 },
+                    { label: 'Bulldog', value: 50 },
+                    { label: 'Pastor aleman', value: 101 }, 
+                    { label: 'Pitbull', value: 61 },  
+                  ]}
+                  chartColors={[
+                    theme.palette.primary.main,
+                    theme.palette.info.main,
+                    theme.palette.warning.main,
+                    theme.palette.error.main,
+                  ]}
+
+                />
+
+              </Grid2>
 
             </Grid>
         </Container>
