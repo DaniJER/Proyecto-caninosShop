@@ -17,7 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from crud import views
+from .views import CreateUserView
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.helloworld)
+    path('',views.helloworld),
+    path('register/', CreateUserView.as_view(), name='register'),
 ]
