@@ -1,8 +1,7 @@
+import { Userapp } from "@/components/dashboard/ui/secctions/users/Userapp";
 
 export default function UserPage() {
   return (
-    <div >
-      <h1>user</h1>
-    </div>
+    <Userapp/>
   );
 }
