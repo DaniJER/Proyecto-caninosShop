@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'crud',
     'rest_framework',
 ]
@@ -47,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'projectpetShop.urls'
@@ -117,3 +119,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Para permitir solo un dominio específico
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Dominio de desarrollo de Next.js
+]
+
+# Para permitir todos los dominios en pruebas
+#CORS_ALLOW_ALL_ORIGINS = True
