@@ -1,15 +1,15 @@
 'use client';
 
+import dynamic from 'next/dynamic';
+const ApexCharts = dynamic(() => import('react-apexcharts'), { ssr: false });
+
 import { Box, ButtonBase, Card, CardHeader, MenuItem, Popover } from '@mui/material';
 import React, { useState } from 'react';
-import ReactApexChart from 'react-apexcharts';
 import { useChart } from '../../chart';
 
 
 
 const AppAnnualSalesTrends = ({ title, subheader, chartLabels, chartData, ...other }) => {
-
-    console.log({title, subheader, chartLabels, chartData})
 
     const YEAR = ['2023','2024'];
     const [open, setOpen] = useState(null);
@@ -17,7 +17,6 @@ const AppAnnualSalesTrends = ({ title, subheader, chartLabels, chartData, ...oth
 
     const [chartDate] = useState(chartData)
 
-    console.log(chartDate[selectionYear])
 
     const handleOpen = (event) => {
         setOpen(event.currentTarget);
@@ -131,7 +130,7 @@ const AppAnnualSalesTrends = ({ title, subheader, chartLabels, chartData, ...oth
         <CardHeader title={title} subheader={subheader} sx={{ '& span:first-child':{fontWeight:'700' ,fontSize:'1.125rem'} ,textAlign:'left', padding:'24px 24px 0px'}} action={[year(selectionYear)]}/>
   
         <Box sx={{ p: 3, pb: 1 }} dir="ltr">
-          <ReactApexChart  type="line" series={chartDate[selectionYear]} options={chartOptions} height={364} />
+          <ApexCharts  type="line" series={chartDate[selectionYear]} options={chartOptions} height={364} />
         </Box>
       </Card>
     );

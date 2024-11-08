@@ -1,7 +1,12 @@
+'use client';
+
+import dynamic from 'next/dynamic';
+const ApexCharts = dynamic(() => import('react-apexcharts'), { ssr: false });
+
 import { Box, Card, Stack, Typography } from '@mui/material';
 import React from 'react';
-import ReactApexChart from 'react-apexcharts';
 import { IoIosTrendingDown, IoIosTrendingUp } from "react-icons/io";
+
 
 const AppStatistics = ({porcentaje, title , valores, charDate, colorColumn}) => {
  
@@ -108,7 +113,7 @@ const AppStatistics = ({porcentaje, title , valores, charDate, colorColumn}) => 
                 </Box>
 
                 <Box dir="ltr">
-                    <ReactApexChart options={chartOptions} series={[{ data: charDate }]} type="bar" height={36} width={60} />
+                    <ApexCharts options={chartOptions} series={[{ data: charDate }]} type="bar" height={36} width={60} />
                 </Box>
 
             </Card>

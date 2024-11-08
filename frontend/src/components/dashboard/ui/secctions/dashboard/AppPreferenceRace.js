@@ -1,8 +1,13 @@
-import ReactApexChart from 'react-apexcharts';
+"use client";
+
+import dynamic from 'next/dynamic';
+const ApexCharts = dynamic(() => import("react-apexcharts"), { ssr: false });
+
 import { useTheme, styled } from '@mui/material/styles';
 import { Card, CardHeader } from '@mui/material';
 import { useChart } from '../../chart';
 import { fNumber } from '@/utils/formatNumber';
+
 
 // ----------------------------------------------------------------------
 
@@ -93,7 +98,7 @@ export default function AppPreferenceRace({ title, subheader, chartColors, chart
       />
 
         <StyledChartWrapper dir="ltr">
-           <ReactApexChart type="donut" series={chartSeries} options={chartOptions} height={280} />
+           <ApexCharts type="donut" series={chartSeries} options={chartOptions} height={280} />
         </StyledChartWrapper>
     </Card>
   );
