@@ -12,3 +12,7 @@ class CrearUsuario(models.Model):
 
     def __str__(self):
         return self.nombre
+
+usuario = User.objects.get(id=user_id)
+usuario.delete()
+ 
