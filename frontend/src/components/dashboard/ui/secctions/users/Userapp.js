@@ -10,6 +10,7 @@ import { sentenceCase } from 'change-case';
 import { SlOptionsVertical } from "react-icons/sl";
 import { filter } from 'lodash';
 import { useRouter } from 'next/navigation';
+import { UserDeleteDialog } from './UserDeleteDialog';
 
 // ----------------------------------------------------------------------
 
@@ -70,6 +71,8 @@ export const Userapp = () => {
 
   const [open, setOpen] = useState(null);
 
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -101,11 +104,21 @@ export const Userapp = () => {
   };
 
   const handleDelete = () => {
-    // Delete user logic here
-    console.log('Delete user', selectedUserId);
     handleCloseMenu();
+    setOpenDeleteDialog(true)
   }
 
+  const handleConfirmDelete = () => {
+    // Lógica para eliminar el usuario
+    console.log('Delete user', selectedUserId);
+    setOpenDeleteDialog(false);
+    handleCloseMenu();
+  };
+
+  const handleCancelDelete = () => {
+    setOpenDeleteDialog(false); // Cierra el cuadro de diálogo
+    handleCloseMenu();
+  }
   
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -259,7 +272,22 @@ export const Userapp = () => {
 
     </Container>
 
-    <Popover
+    <Options open={open} handleCloseMenu={handleCloseMenu} handleEdit={handleEdit} handleDelete={handleDelete}/>
+
+    <UserDeleteDialog
+        open={openDeleteDialog}
+        onCancel={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+    />
+
+    </> 
+  )
+}
+
+
+const Options = ({open, handleCloseMenu, handleEdit, handleDelete })=>{
+    return (
+        <Popover
         open={Boolean(open)}
         anchorEl={open}
         onClose={handleCloseMenu}
@@ -285,6 +313,4 @@ export const Userapp = () => {
           Eliminar
         </MenuItem>
       </Popover>
-      </> 
-  )
-}
+    )}
