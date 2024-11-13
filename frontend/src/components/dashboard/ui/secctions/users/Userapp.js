@@ -9,6 +9,8 @@ import Label from '../../label';
 import { sentenceCase } from 'change-case';
 import { SlOptionsVertical } from "react-icons/sl";
 import { filter } from 'lodash';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 // ----------------------------------------------------------------------
 
@@ -81,14 +83,25 @@ export const Userapp = () => {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const handleOpenMenu = (event) => {
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
+  const router = useRouter();
+
+  const handleOpenMenu = (event, userId) => {
     setOpen(event.currentTarget);
+    setSelectedUserId(userId);
   };
 
   const handleCloseMenu = () => {
     setOpen(null);
   };
 
+  const handleEdit = () => {
+    router.push(`/dashboard/users/edit/${selectedUserId}`); 
+    handleCloseMenu();
+  };
+
+  
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -104,20 +117,6 @@ export const Userapp = () => {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-    setSelected(newSelected);
-  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -190,7 +189,7 @@ export const Userapp = () => {
                         </TableCell>
 
                         <TableCell align="right">
-                          <IconButton size="small" sx={{padding:'12px'}} color="inherit" onClick={handleOpenMenu}>
+                          <IconButton size="small" sx={{padding:'12px'}} color="inherit" onClick={ (event) => handleOpenMenu(event, id)}>
                           <SlOptionsVertical />
                           </IconButton>
                         </TableCell>
@@ -261,7 +260,7 @@ export const Userapp = () => {
           },
         }}
       >
-        <MenuItem>
+        <MenuItem onClick={handleEdit}>
           Editar
         </MenuItem>
 
