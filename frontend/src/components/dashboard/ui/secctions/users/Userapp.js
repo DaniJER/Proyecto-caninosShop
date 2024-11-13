@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, Button, Card, Checkbox, Container, IconButton, MenuItem, Paper, Popover, Stack, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Typography } from '@mui/material'
+import { Avatar, Box, Card, Container, IconButton, MenuItem, Paper, Popover, Stack, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import UserListToolbar from './UserListToolbar';
 import ScrollBar from '../../scrollbar/ScrollBar';
@@ -9,7 +9,6 @@ import Label from '../../label';
 import { sentenceCase } from 'change-case';
 import { SlOptionsVertical } from "react-icons/sl";
 import { filter } from 'lodash';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 // ----------------------------------------------------------------------
@@ -100,6 +99,12 @@ export const Userapp = () => {
     router.push(`/dashboard/users/edit/${selectedUserId}`); 
     handleCloseMenu();
   };
+
+  const handleDelete = () => {
+    // Delete user logic here
+    console.log('Delete user', selectedUserId);
+    handleCloseMenu();
+  }
 
   
   const handleRequestSort = (event, property) => {
@@ -209,17 +214,29 @@ export const Userapp = () => {
                         <Paper
                           sx={{
                             textAlign: 'center',
+                            background: 'rgba(145, 158, 171, 0.1)',
+                            padding: '12px'
                           }}
                         >
-                          <Typography variant="h6" paragraph>
-                            No encontrado
-                          </Typography>
+                          <Stack sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
 
-                          <Typography variant="body2">
+                          }}>
+                            <Box
+                                component="img"
+                                alt="contenido vacío"
+                                src="/images/ic-content.svg"
+                                width={160}
+                                height={160}
+                            />
+                            <Typography variant="body2">
                             No se han encontrado resultados para &nbsp;
                             <strong>&quot;{filterName}&quot;</strong>.
                             <br /> Intente comprobar si hay errores tipográficos o usar palabras completas.
-                          </Typography>
+                          </Typography> 
+                            </Stack>
                         </Paper>
                       </TableCell>
                     </TableRow>
@@ -264,7 +281,7 @@ export const Userapp = () => {
           Editar
         </MenuItem>
 
-        <MenuItem sx={{ color: 'error.main' }}>
+        <MenuItem sx={{ color: 'error.main' }} onClick={handleDelete}>
           Eliminar
         </MenuItem>
       </Popover>
