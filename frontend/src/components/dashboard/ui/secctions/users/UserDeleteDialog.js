@@ -42,7 +42,7 @@ export const UserDeleteDialog = ({ open, onCancel, onConfirm }) => {
           Eliminar
         </Button>
         <Button onClick={onCancel} color="primary" sx={{
-            border:'1px gray solid',
+            border:'1px solid gainsboro',
             color: '#000000',
             marginLeft: '12px',
             padding: '5px 12px',

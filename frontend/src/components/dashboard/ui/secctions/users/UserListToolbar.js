@@ -6,6 +6,7 @@ import { Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment
 import { FaUserPlus } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiSearch } from "react-icons/ci";
+import Link from 'next/link';
 
 // component
 
@@ -77,9 +78,11 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
         </Tooltip>
       ) : (
         <Tooltip title="Nuevo Usuario">
-          <IconButton>
-            <FaUserPlus color='gray' />
-          </IconButton>
+           <Link href={'/dashboard/users/new'}>
+            <IconButton>
+                <FaUserPlus color='gray' />
+            </IconButton>
+          </Link>
         </Tooltip>
       )}
     </StyledRoot>
