@@ -11,6 +11,7 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { filter } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { UserDeleteDialog } from './UserDeleteDialog';
+import toast from 'react-hot-toast';
 
 // ----------------------------------------------------------------------
 
@@ -109,14 +110,15 @@ export const Userapp = () => {
   }
 
   const handleConfirmDelete = () => {
-    // Lógica para eliminar el usuario
+    // todo: Lógica para eliminar el usuario
     console.log('Delete user', selectedUserId);
     setOpenDeleteDialog(false);
     handleCloseMenu();
+    toast.success(`Usuario eliminado`)
   };
 
   const handleCancelDelete = () => {
-    setOpenDeleteDialog(false); // Cierra el cuadro de diálogo
+    setOpenDeleteDialog(false); 
     handleCloseMenu();
   }
   
@@ -149,8 +151,6 @@ export const Userapp = () => {
     setPage(0);
     setFilterName(event.target.value);
   };
-
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
 
   const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
 
@@ -214,12 +214,20 @@ export const Userapp = () => {
                       </TableRow>
                     );
                   })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
                 </TableBody>
+                {
+                    USERLIST.length <= 0 && (
+                        <TableBody>
+                            <TableRow>
+                                <TableCell colSpan={6} align="center">
+                                    <Typography variant="h6" color="textSecondary" noWrap>
+                                        No hay usuarios registrados
+                                    </Typography>
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    ) 
+                }
                 {isNotFound && (
                   <TableBody>
                     <TableRow>
