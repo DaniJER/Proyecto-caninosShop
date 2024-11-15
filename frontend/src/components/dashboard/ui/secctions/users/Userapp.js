@@ -4,7 +4,6 @@ import { Avatar, Box, Card, Container, IconButton, MenuItem, Paper, Popover, Sta
 import React, { useState } from 'react'
 import UserListToolbar from './UserListToolbar';
 import ScrollBar from '../../scrollbar/ScrollBar';
-import UserListHead from './UserListHead';
 import Label from '../../label';
 import { sentenceCase } from 'change-case';
 import { SlOptionsVertical } from "react-icons/sl";
@@ -12,6 +11,7 @@ import { filter } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { UserDeleteDialog } from './UserDeleteDialog';
 import toast from 'react-hot-toast';
+import ListHead from '../ui/ListHead';
 
 // ----------------------------------------------------------------------
 
@@ -171,7 +171,7 @@ export const Userapp = () => {
             <ScrollBar>
                 <TableContainer sx={{ minWidth: 800 }}>
                     <Table>
-                    <UserListHead
+                    <ListHead
                     order={order}
                     orderBy={orderBy}
                     headLabel={TABLE_HEAD}
