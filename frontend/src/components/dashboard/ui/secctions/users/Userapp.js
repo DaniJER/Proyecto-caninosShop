@@ -7,11 +7,12 @@ import ScrollBar from '../../scrollbar/ScrollBar';
 import Label from '../../label';
 import { sentenceCase } from 'change-case';
 import { SlOptionsVertical } from "react-icons/sl";
-import { filter } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { UserDeleteDialog } from './UserDeleteDialog';
 import toast from 'react-hot-toast';
 import ListHead from '../ui/ListHead';
+import { applySortFilter, getComparator } from '@/utils';
+import { EmptyContent } from '../ui/EmptyContent';
 
 // ----------------------------------------------------------------------
 
@@ -39,35 +40,7 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
-  }
-  
-  function getComparator(order, orderBy) {
-    return order === 'desc'
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
-  }
-  
-  function applySortFilter(array, comparator, query) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const order = comparator(a[0], b[0]);
-      if (order !== 0) return order;
-      return a[1] - b[1];
-    });
-    if (query) {
-      return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-    }
-    return stabilizedThis.map((el) => el[0]);
-  }
-  
+
 export const Userapp = () => {
 
   const [open, setOpen] = useState(null);
@@ -152,7 +125,7 @@ export const Userapp = () => {
     setFilterName(event.target.value);
   };
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName, orderBy);
 
   const isNotFound = !filteredUsers.length && !!filterName;
 
@@ -167,7 +140,7 @@ export const Userapp = () => {
         </Stack>
 
         <Card>
-            <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+            <UserListToolbar filterName={filterName} onFilterName={handleFilterByName} />
             <ScrollBar>
                 <TableContainer sx={{ minWidth: 800 }}>
                     <Table>
@@ -228,41 +201,11 @@ export const Userapp = () => {
                         </TableBody>
                     ) 
                 }
-                {isNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <Paper
-                          sx={{
-                            textAlign: 'center',
-                            background: 'rgba(145, 158, 171, 0.1)',
-                            padding: '12px'
-                          }}
-                        >
-                          <Stack sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-
-                          }}>
-                            <Box
-                                component="img"
-                                alt="contenido vacío"
-                                src="/images/ic-content.svg"
-                                width={160}
-                                height={160}
-                            />
-                            <Typography variant="body2">
-                            No se han encontrado resultados para &nbsp;
-                            <strong>&quot;{filterName}&quot;</strong>.
-                            <br /> Intente comprobar si hay errores tipográficos o usar palabras completas.
-                          </Typography> 
-                            </Stack>
-                        </Paper>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
+                {
+                    isNotFound && (
+                        <EmptyContent filterName={filterName} colSpan={6}/>
+                    )
+                }
 
                     </Table>   
                 </TableContainer>
