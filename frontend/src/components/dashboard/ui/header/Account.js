@@ -2,8 +2,9 @@
 
 import { Avatar, Box, Divider, IconButton, MenuItem, Popover, Stack, Typography, alpha } from '@mui/material';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 
 
 const menuItems = [
@@ -18,9 +19,14 @@ const Account = () => {
     const [open, setOpen] = useState(null);
     const pathname = usePathname();
 
+    const router = useRouter();
+
 
     const onLogout = ()=>{
         // todo: cerrar la session del usuario
+        router.replace('/')
+        setOpen(null);
+        toast.success('Session cerrada')
         return
     }
     
@@ -101,10 +107,10 @@ const Account = () => {
             <Box sx={{ my: 1.5, px: 2.5 , }} >
 
           <Typography variant="subtitle2" noWrap>
-            name
+            Jhoni
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            example@gmail.com
+            jhoni@gmail.com
           </Typography>
         </Box>
         <Divider sx={{ borderStyle: 'dashed' }} />

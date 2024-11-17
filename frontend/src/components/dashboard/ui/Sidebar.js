@@ -84,7 +84,7 @@ const Sidebar = ({draweWidth, openNav, onCloseNav, onToggleDrawerWidth}) => {
                                 fontSize:'0.76rem',
                             }),
                             }}>
-                        name
+                        Jhoni
                     </Typography>
                     </Box>
                 </StyledAccount>

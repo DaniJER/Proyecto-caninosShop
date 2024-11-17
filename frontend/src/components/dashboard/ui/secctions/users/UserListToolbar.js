@@ -6,6 +6,7 @@ import { Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment
 import { FaUserPlus } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { CiSearch } from "react-icons/ci";
+import Link from 'next/link';
 
 // component
 
@@ -42,21 +43,10 @@ UserListToolbar.propTypes = {
   onFilterName: PropTypes.func,
 };
 
-export default function UserListToolbar({ numSelected, filterName, onFilterName }) {
+export default function UserListToolbar({ filterName, onFilterName }) {
   return (
     <StyledRoot
-      sx={{
-        ...(numSelected > 0 && {
-          color: 'primary.main',
-          bgcolor: 'primary.lighter',
-        }),
-      }}
     >
-      {numSelected > 0 ? (
-        <Typography component="div" variant="subtitle1">
-          {numSelected} selected
-        </Typography>
-      ) : (
         <StyledSearch
           value={filterName}
           onChange={onFilterName}
@@ -67,21 +57,14 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
             </InputAdornment>
           }
         />
-      )}
 
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <RiDeleteBin6Line />
-          </IconButton>
-        </Tooltip>
-      ) : (
         <Tooltip title="Nuevo Usuario">
-          <IconButton>
-            <FaUserPlus color='gray' />
-          </IconButton>
+           <Link href={'/dashboard/users/new'}>
+            <IconButton>
+                <FaUserPlus color='gray' />
+            </IconButton>
+          </Link>
         </Tooltip>
-      )}
     </StyledRoot>
   );
 }

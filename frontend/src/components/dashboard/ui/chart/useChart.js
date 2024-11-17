@@ -1,3 +1,5 @@
+'use client';
+
 import merge from 'lodash/merge';
 // @mui
 import { useTheme, alpha } from '@mui/material/styles';

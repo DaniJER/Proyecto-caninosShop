@@ -9,15 +9,19 @@ export const Userapp = () => {
 =======
 'use client';
 
-import { Avatar, Button, Card, Checkbox, Container, IconButton, MenuItem, Paper, Popover, Stack, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Typography } from '@mui/material'
+import { Avatar, Box, Card, Container, IconButton, MenuItem, Paper, Popover, Stack, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import UserListToolbar from './UserListToolbar';
 import ScrollBar from '../../scrollbar/ScrollBar';
-import UserListHead from './UserListHead';
 import Label from '../../label';
 import { sentenceCase } from 'change-case';
 import { SlOptionsVertical } from "react-icons/sl";
-import { filter } from 'lodash';
+import { useRouter } from 'next/navigation';
+import { UserDeleteDialog } from './UserDeleteDialog';
+import toast from 'react-hot-toast';
+import ListHead from '../ui/ListHead';
+import { applySortFilter, getComparator } from '@/utils';
+import { EmptyContent } from '../ui/EmptyContent';
 
 // ----------------------------------------------------------------------
 
@@ -45,38 +49,12 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
-  }
-  
-  function getComparator(order, orderBy) {
-    return order === 'desc'
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
-  }
-  
-  function applySortFilter(array, comparator, query) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const order = comparator(a[0], b[0]);
-      if (order !== 0) return order;
-      return a[1] - b[1];
-    });
-    if (query) {
-      return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-    }
-    return stabilizedThis.map((el) => el[0]);
-  }
-  
+
 export const Userapp = () => {
 
   const [open, setOpen] = useState(null);
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const [page, setPage] = useState(0);
 
@@ -90,14 +68,42 @@ export const Userapp = () => {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const handleOpenMenu = (event) => {
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
+  const router = useRouter();
+
+  const handleOpenMenu = (event, userId) => {
     setOpen(event.currentTarget);
+    setSelectedUserId(userId);
   };
 
   const handleCloseMenu = () => {
     setOpen(null);
   };
 
+  const handleEdit = () => {
+    router.push(`/dashboard/users/edit/${selectedUserId}`); 
+    handleCloseMenu();
+  };
+
+  const handleDelete = () => {
+    handleCloseMenu();
+    setOpenDeleteDialog(true)
+  }
+
+  const handleConfirmDelete = () => {
+    // todo: Lógica para eliminar el usuario
+    console.log('Delete user', selectedUserId);
+    setOpenDeleteDialog(false);
+    handleCloseMenu();
+    toast.success(`Usuario eliminado`)
+  };
+
+  const handleCancelDelete = () => {
+    setOpenDeleteDialog(false); 
+    handleCloseMenu();
+  }
+  
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -113,20 +119,6 @@ export const Userapp = () => {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
-    }
-    setSelected(newSelected);
-  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -142,9 +134,7 @@ export const Userapp = () => {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
-
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName, orderBy);
 
   const isNotFound = !filteredUsers.length && !!filterName;
 
@@ -161,16 +151,20 @@ export const Userapp = () => {
 
         <Card>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <UserListToolbar/>
         </Card>
 
     </Container>
 =======
             <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+=======
+            <UserListToolbar filterName={filterName} onFilterName={handleFilterByName} />
+>>>>>>> 3a5d174e6bff5ddc217311826f725b055bbb4693
             <ScrollBar>
                 <TableContainer sx={{ minWidth: 800 }}>
                     <Table>
-                    <UserListHead
+                    <ListHead
                     order={order}
                     orderBy={orderBy}
                     headLabel={TABLE_HEAD}
@@ -206,42 +200,32 @@ export const Userapp = () => {
                         </TableCell>
 
                         <TableCell align="right">
-                          <IconButton size="small" sx={{padding:'12px'}} color="inherit" onClick={handleOpenMenu}>
+                          <IconButton size="small" sx={{padding:'12px'}} color="inherit" onClick={ (event) => handleOpenMenu(event, id)}>
                           <SlOptionsVertical />
                           </IconButton>
                         </TableCell>
                       </TableRow>
                     );
                   })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
                 </TableBody>
-                {isNotFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <Paper
-                          sx={{
-                            textAlign: 'center',
-                          }}
-                        >
-                          <Typography variant="h6" paragraph>
-                            No encontrado
-                          </Typography>
-
-                          <Typography variant="body2">
-                            No se han encontrado resultados para &nbsp;
-                            <strong>&quot;{filterName}&quot;</strong>.
-                            <br /> Intente comprobar si hay errores tipográficos o usar palabras completas.
-                          </Typography>
-                        </Paper>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
+                {
+                    USERLIST.length <= 0 && (
+                        <TableBody>
+                            <TableRow>
+                                <TableCell colSpan={6} align="center">
+                                    <Typography variant="h6" color="textSecondary" noWrap>
+                                        No hay usuarios registrados
+                                    </Typography>
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    ) 
+                }
+                {
+                    isNotFound && (
+                        <EmptyContent filterName={filterName} colSpan={6}/>
+                    )
+                }
 
                     </Table>   
                 </TableContainer>
@@ -259,7 +243,22 @@ export const Userapp = () => {
 
     </Container>
 
-    <Popover
+    <Options open={open} handleCloseMenu={handleCloseMenu} handleEdit={handleEdit} handleDelete={handleDelete}/>
+
+    <UserDeleteDialog
+        open={openDeleteDialog}
+        onCancel={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+    />
+
+    </> 
+  )
+}
+
+
+const Options = ({open, handleCloseMenu, handleEdit, handleDelete })=>{
+    return (
+        <Popover
         open={Boolean(open)}
         anchorEl={open}
         onClose={handleCloseMenu}
@@ -277,15 +276,19 @@ export const Userapp = () => {
           },
         }}
       >
-        <MenuItem>
+        <MenuItem onClick={handleEdit}>
           Editar
         </MenuItem>
 
-        <MenuItem sx={{ color: 'error.main' }}>
+        <MenuItem sx={{ color: 'error.main' }} onClick={handleDelete}>
           Eliminar
         </MenuItem>
       </Popover>
+<<<<<<< HEAD
       </> 
 >>>>>>> f71302d3a1d68eff91de90186adbd625a717974c
   )
 }
+=======
+    )}
+>>>>>>> 3a5d174e6bff5ddc217311826f725b055bbb4693
