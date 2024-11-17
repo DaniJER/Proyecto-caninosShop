@@ -71,7 +71,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'projectpetShop.wsgi.application'
-
+AUTH_USER_MODEL = 'users.Perfil'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -128,3 +128,6 @@ CORS_ALLOWED_ORIGINS = [
 
 # Para permitir todos los dominios en pruebas
 #CORS_ALLOW_ALL_ORIGINS = True
+
+
+
