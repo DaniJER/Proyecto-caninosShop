@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Avatar, Box, Card, Container, IconButton, MenuItem, Paper, Popover, Stack, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Typography } from '@mui/material'
@@ -140,7 +141,9 @@ export const Userapp = () => {
         </Stack>
 
         <Card>
+        
             <UserListToolbar filterName={filterName} onFilterName={handleFilterByName} />
+
             <ScrollBar>
                 <TableContainer sx={{ minWidth: 800 }}>
                     <Table>
@@ -264,4 +267,6 @@ const Options = ({open, handleCloseMenu, handleEdit, handleDelete })=>{
           Eliminar
         </MenuItem>
       </Popover>
-    )}
+  )
+}
+
