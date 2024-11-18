@@ -1,12 +1,4 @@
-<<<<<<< HEAD
-import { Button, Card, Container, Stack, Typography } from '@mui/material'
-import React from 'react'
-import { FaPlus } from "react-icons/fa6";
-import UserListToolbar from './UserListToolbar';
 
-export const Userapp = () => {
-  return (
-=======
 'use client';
 
 import { Avatar, Box, Card, Container, IconButton, MenuItem, Paper, Popover, Stack, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Typography } from '@mui/material'
@@ -141,7 +133,6 @@ export const Userapp = () => {
 
   return (
     <>
->>>>>>> f71302d3a1d68eff91de90186adbd625a717974c
     <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={4} mt={2}>
           <Typography variant="h4" gutterBottom>
@@ -150,17 +141,9 @@ export const Userapp = () => {
         </Stack>
 
         <Card>
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <UserListToolbar/>
-        </Card>
-
-    </Container>
-=======
-            <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
-=======
+        
             <UserListToolbar filterName={filterName} onFilterName={handleFilterByName} />
->>>>>>> 3a5d174e6bff5ddc217311826f725b055bbb4693
+
             <ScrollBar>
                 <TableContainer sx={{ minWidth: 800 }}>
                     <Table>
@@ -284,11 +267,6 @@ const Options = ({open, handleCloseMenu, handleEdit, handleDelete })=>{
           Eliminar
         </MenuItem>
       </Popover>
-<<<<<<< HEAD
-      </> 
->>>>>>> f71302d3a1d68eff91de90186adbd625a717974c
   )
 }
-=======
-    )}
->>>>>>> 3a5d174e6bff5ddc217311826f725b055bbb4693
+
