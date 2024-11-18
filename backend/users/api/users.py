@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status, permissions
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserLoginSerializer
+from ..serializers import UserLoginSerializer
 
 class LoginAPIView(APIView):
     permission_classes = [permissions.AllowAny]  # Permite acceso público

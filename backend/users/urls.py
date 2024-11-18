@@ -3,7 +3,7 @@
 from django.urls import path
 from .views import RegistroUsuarioView
 from users.views import DesactivarUsuarioView
-from .api import LoginAPIView
+from .api.users import LoginAPIView
 
 urlpatterns = [
     path('registro/', RegistroUsuarioView.as_view(), name='registro'),
