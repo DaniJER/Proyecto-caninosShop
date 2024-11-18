@@ -15,7 +15,7 @@ class RegistroSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Perfil
-        fields = ['username', 'name', 'lastName', 'userType', 'email', 'password', 'password2', ]
+        fields = ['username', 'userType', 'name', 'lastName', 'email', 'password', 'password2', ]
 
     def create(self, validated_data):
         password = validated_data.pop('password')
@@ -41,9 +41,10 @@ class RegistroSerializer(serializers.ModelSerializer):
         user.save()
 
         # Crear el perfil asociado
+        user.email = validated_data.get('email', '' )
         user.userType = validated_data.get('userType', 'client')
-        user.name = validated_data.get('name', '')
-        user.lastName = validated_data.get('lastName', '')
+        user.name = validated_data.get('name', 'no proporcionado')
+        user.lastName = validated_data.get('lastName', 'no proporcionado')
         user.save()  # Guardamos los cambios en el perfil
 
         return user
@@ -86,3 +87,8 @@ class UserLoginSerializer(serializers.Serializer):
 
         data['user'] = user
         return data
+    
+class ListarUsuariosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Perfil
+        fields = ['id', 'username', 'userType', 'name', 'lastName', 'email', 'date_joined']  # Agrega los campos que deseas incluir

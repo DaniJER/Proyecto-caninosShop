@@ -8,16 +8,16 @@ class Perfil(AbstractUser):
         (ADMIN, 'Admin'),
         (CLIENT, 'Client'),
     ]
-
-    # Campo adicional para diferenciar entre tipos de usuario
+    
+    userName = models.CharField(max_length=100, blank=True, null=True)
     userType = models.CharField(
         max_length=10,
-        choices=CHOICES_USER_TYPE,
-        default=CLIENT,
+        choices=CHOICES_USER_TYPE
     )
-    name = models.CharField(max_length=100, blank=True, null=True)
-    lastName = models.CharField(max_length=100, blank=True, null=True)
+    name = models.CharField(max_length=100, blank=True, null=False)
+    lastName = models.CharField(max_length=100, blank=True, null=False)
     email = models.EmailField(unique=True)
 
     def __str__(self):
         return self.username
+
