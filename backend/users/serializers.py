@@ -2,14 +2,9 @@
 # usuarios/serializers.py
 
 from rest_framework import serializers
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model  # Usamos get_user_model() para obtener el modelo personalizado
 from .models import Perfil
-from rest_framework import serializers
-from django.contrib.auth import get_user_model
-from .models import Perfil
-
 from django.contrib.auth.password_validation import validate_password
-from django.contrib.auth import get_user_model
 
 
 class RegistroSerializer(serializers.ModelSerializer):
@@ -19,12 +14,10 @@ class RegistroSerializer(serializers.ModelSerializer):
     lastName = serializers.CharField(write_only=True, required=False)
 
     class Meta:
-        model = Perfil  # Usamos Perfil, que extiende a User
-        fields = ['username', 'email', 'password', 'password2', 'userType', 'name', 'lastName']
+        model = Perfil
+        fields = ['username', 'name', 'lastName', 'userType', 'email', 'password', 'password2', ]
 
     def create(self, validated_data):
-        print("Datos validados:", validated_data)  # Aquí imprimes los datos validados
-
         password = validated_data.pop('password')
         password2 = validated_data.pop('password2')
 
@@ -32,9 +25,16 @@ class RegistroSerializer(serializers.ModelSerializer):
         if password != password2:
             raise serializers.ValidationError("Las contraseñas no coinciden")
 
-        # Creamos el usuario (Perfil) con los datos filtrados
+        # Validamos la contraseña usando el validador de Django
+        try:
+            validate_password(password)
+        except serializers.ValidationError as e:
+            raise serializers.ValidationError({'password': e.messages})
+
+        # Usamos get_user_model() para crear el usuario (Perfil)
         user_data = {k: validated_data[k] for k in ['username', 'email'] if k in validated_data}
-        user = Perfil.objects.create_user(**user_data)  # Usamos Perfil aquí
+        User = get_user_model()  # Obtiene el modelo de usuario correcto
+        user = User.objects.create_user(**user_data)  # Usamos el modelo correcto (Perfil)
 
         # Establecemos la contraseña
         user.set_password(password)
@@ -48,11 +48,10 @@ class RegistroSerializer(serializers.ModelSerializer):
 
         return user
 
-    
- #PARA QUE EL ADMIN PUEDA DESACTIVAR USUARIOS   
+
 class DesactivarUsuarioSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = get_user_model()  # Usamos el modelo de usuario personalizado
         fields = ['id', 'username', 'is_active']
 
     def update(self, instance, validated_data):
@@ -66,18 +65,6 @@ class DesactivarUsuarioSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-        user = User.objects.create(
-            username=validated_data['username'],
-            email=validated_data['email'],
-        )
-
-        user.set_password(validated_data['password'])
-        user.save()
-
-        return user
-
-
-User = get_user_model()  # Obtiene el modelo personalizado de usuario
 
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
@@ -89,13 +76,13 @@ class UserLoginSerializer(serializers.Serializer):
 
         # Intenta encontrar un usuario con el correo proporcionado
         try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            raise serializers.ValidationError("Invalid credentials.")
+            user = get_user_model().objects.get(email=email)
+        except get_user_model().DoesNotExist:
+            raise serializers.ValidationError("Credenciales inválidas.")
 
         # Verifica si la contraseña es correcta
         if not user.check_password(password):
-            raise serializers.ValidationError("Invalid credentials.")
+            raise serializers.ValidationError("Credenciales inválidas.")
 
         data['user'] = user
         return data

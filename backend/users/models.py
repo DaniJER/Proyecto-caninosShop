@@ -9,6 +9,7 @@ class Perfil(AbstractUser):
         (CLIENT, 'Client'),
     ]
 
+    # Campo adicional para diferenciar entre tipos de usuario
     userType = models.CharField(
         max_length=10,
         choices=CHOICES_USER_TYPE,
