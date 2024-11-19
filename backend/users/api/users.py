@@ -93,3 +93,53 @@ class DesactivarUsuarioView(RetrieveUpdateAPIView):
     queryset = Perfil.objects.all()
     serializer_class = DesactivarUsuarioSerializer
     permission_classes = [IsAdminOrReadOnly]  # Aplicamos el permiso personalizado
+
+#API PARA FILTRAR A LOS USUARIOS 
+class FiltrarUsuariosView(ListAPIView):
+    permission_classes = [IsAuthenticated]  # Asegúrate de que solo usuarios autenticados puedan usarlo
+    serializer_class = ListarUsuariosSerializer
+    queryset = Perfil.objects.all()  # Base inicial de usuarios
+
+    def get_queryset(self):
+        """
+        Personaliza el queryset según los parámetros recibidos en la petición.
+        """
+        queryset = super().get_queryset()
+        params = self.request.query_params  # Obtén los parámetros de la URL
+
+        # Filtros disponibles
+        username = params.get('username', None)
+        userType = params.get('userType', None)
+        email = params.get('email', None)
+        is_active = params.get('is_active', None)
+
+        # Aplicar filtros si están presentes
+        if username:
+            queryset = queryset.filter(username__icontains=username)
+        if userType:
+            queryset = queryset.filter(userType=userType)
+        if email:
+            queryset = queryset.filter(email__icontains=email)
+        if is_active is not None:
+            queryset = queryset.filter(is_active=is_active.lower() == 'true')
+
+        return queryset   
+    
+#VISTA PARA CERRAR SESIÓN    
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            # Obtener el token de refresco del cuerpo de la solicitud
+            refresh_token = request.data.get("refresh")
+            if not refresh_token:
+                return Response({"error": "No se proporcionó un token de refresco."}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Invalidar el token de refresco
+            token = RefreshToken(refresh_token)
+            token.blacklist()  # Este método requiere haber habilitado el blacklist de JWT
+
+            return Response({"mensaje": "Sesión cerrada exitosamente."}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": "Error al cerrar la sesión."}, status=status.HTTP_400_BAD_REQUEST)
