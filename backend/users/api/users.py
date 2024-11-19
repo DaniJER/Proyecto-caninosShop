@@ -80,8 +80,6 @@ class RegistroUsuarioView(APIView):
                 {"error": "Error al crear el usuario. Verifica los datos proporcionados."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
-
 #API PARA LISTAR USUARIOS
 class ListarUsuariosView(ListAPIView):
     # Permite acceso a todos los usuarios autenticados
