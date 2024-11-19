@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Avatar, Box, Card, Container, IconButton, MenuItem, Paper, Popover, Stack, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Typography } from '@mui/material'
@@ -9,11 +8,11 @@ import Label from '../../label';
 import { sentenceCase } from 'change-case';
 import { SlOptionsVertical } from "react-icons/sl";
 import { useRouter } from 'next/navigation';
-import { UserDeleteDialog } from './UserDeleteDialog';
 import toast from 'react-hot-toast';
 import ListHead from '../ui/ListHead';
 import { applySortFilter, getComparator } from '@/utils';
 import { EmptyContent } from '../ui/EmptyContent';
+import { DeleteDialog } from '../ui/DeleteDialog';
 
 // ----------------------------------------------------------------------
 
@@ -228,10 +227,12 @@ export const Userapp = () => {
 
     <Options open={open} handleCloseMenu={handleCloseMenu} handleEdit={handleEdit} handleDelete={handleDelete}/>
 
-    <UserDeleteDialog
+    <DeleteDialog
         open={openDeleteDialog}
         onCancel={handleCancelDelete}
         onConfirm={handleConfirmDelete}
+        subtitle='¿Estás seguro que deseas eliminar este usuario?'
+        
     />
 
     </> 
