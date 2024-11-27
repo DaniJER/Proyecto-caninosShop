@@ -3,7 +3,7 @@
 
 from rest_framework import serializers
 from django.contrib.auth import get_user_model  # Usamos get_user_model() para obtener el modelo personalizado
-from .models import Perfil
+from .models import User
 from django.contrib.auth.password_validation import validate_password
 
 
@@ -14,8 +14,8 @@ class RegistroSerializer(serializers.ModelSerializer):
     lastName = serializers.CharField(write_only=True, required=False)
 
     class Meta:
-        model = Perfil
-        fields = ['username', 'userType', 'name', 'lastName', 'email', 'password', 'password2', ]
+        model = User
+        fields = ['username', 'userType', 'fullName', 'lastName', 'email', 'password', 'password2', ]
 
     def create(self, validated_data):
         password = validated_data.pop('password')
@@ -90,5 +90,5 @@ class UserLoginSerializer(serializers.Serializer):
     
 class ListarUsuariosSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Perfil
+        model = User
         fields = ['id', 'username', 'userType', 'name', 'lastName', 'email', 'date_joined']  # Agrega los campos que deseas incluir

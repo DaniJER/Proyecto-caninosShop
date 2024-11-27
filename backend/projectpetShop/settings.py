@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-p&##917^&^#n=4nqfbqgc&)+24o1l-ao76(4m53flms@8dnra-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -66,7 +66,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-AUTH_USER_MODEL = 'users.Perfil'
+AUTH_USER_MODEL = 'users.User'
 
 ROOT_URLCONF = 'projectpetShop.urls'
 
@@ -120,7 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # Duración del token de acceso
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=40),  # Duración del token de acceso
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),    # Duración del token de refresco
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
