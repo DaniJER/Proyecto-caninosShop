@@ -14,7 +14,7 @@ class Perfil(AbstractUser):
         max_length=10,
         choices=CHOICES_USER_TYPE
     )
-    name = models.CharField(max_length=100, blank=True, null=False)
+    fullName = models.CharField(max_length=100, blank=True, null=False)
     lastName = models.CharField(max_length=100, blank=True, null=False)
     email = models.EmailField(unique=True)
 
