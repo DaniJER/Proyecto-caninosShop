@@ -11,9 +11,11 @@ import { applySortFilter, getComparator } from '@/utils';
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { GrEdit } from "react-icons/gr";
 import { EmptyContent } from '../ui/EmptyContent';
+import { DeleteDialog } from '../ui/DeleteDialog';
+import toast from 'react-hot-toast';
 
 const TABLE_HEAD = [
-    { id: 'Pet', label: 'Mascota', alignRight: false },
+    { id: 'pet', label: 'Mascota', alignRight: false },
     { id: 'createAt', label: 'Creado en', alignRight: false },
     { id: 'price', label: 'Precio', alignRight: false },
     { id: 'stock', label: 'Existencias', alignRight: false },
@@ -21,16 +23,16 @@ const TABLE_HEAD = [
   ];
 
 const PETS_LIST = [
-  { id: 1, pet: 'Pastor alemán', createAt: '2022-11-15', price: '500,000', stock: 10 },
-  { id: 2, pet: 'Bulldog Francés', createAt: '2023-01-10', price: '600,000', stock: 4 },
-  { id: 3, pet: 'Golden Retriever', createAt: '2023-02-20', price: '550,000', stock: 3 },
-  { id: 4, pet: 'Labrador', createAt: '2023-03-05', price: '480,000', stock: 6 },
-  { id: 5, pet: 'Beagle', createAt: '2023-04-12', price: '450,000', stock: 10 },
-  { id: 6, pet: 'Shih Tzu', createAt: '2023-05-18', price: '350,000', stock: 5 },
-  { id: 7, pet: 'Husky Siberiano', createAt: '2023-06-25', price: '700,000', stock: 0 },
-  { id: 8, pet: 'Dálmata', createAt: '2023-07-30', price: '520,000', stock: 7 },
-  { id: 9, pet: 'Pug', createAt: '2023-08-15', price: '400,000', stock: 8 },
-  { id: 10, pet: 'Border Collie', createAt: '2023-09-21', price: '580,000', stock: 0 },
+  { id: 1, pet: 'Pastor alemán', createAt: '2022-11-15', price: '500,000', stock: 10, imageUrl:'https://images.pexels.com/photos/29443619/pexels-photo-29443619/free-photo-of-retrato-de-un-perro-pastor-aleman.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
+  { id: 2, pet: 'Bulldog Francés', createAt: '2023-01-10', price: '600,000', stock: 4, imageUrl:'https://images.pexels.com/photos/160846/french-bulldog-summer-smile-joy-160846.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'  },
+  { id: 3, pet: 'Golden Retriever', createAt: '2023-02-20', price: '550,000', stock: 3, imageUrl:'https://images.pexels.com/photos/2409503/pexels-photo-2409503.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'  },
+  { id: 4, pet: 'Labrador', createAt: '2023-03-05', price: '480,000', stock: 6, imageUrl:'https://images.pexels.com/photos/35638/labrador-breed-dogs-animal.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'  },
+  { id: 5, pet: 'Beagle', createAt: '2023-04-12', price: '450,000', stock: 10, imageUrl:'https://images.pexels.com/photos/7288/animal-dog-pet-park.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'  },
+  { id: 6, pet: 'Shih Tzu', createAt: '2023-05-18', price: '350,000', stock: 5, imageUrl:'https://images.pexels.com/photos/130771/pexels-photo-130771.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'  },
+  { id: 7, pet: 'Husky Siberiano', createAt: '2023-06-25', price: '700,000', stock: 0, imageUrl:'https://images.pexels.com/photos/29392780/pexels-photo-29392780/free-photo-of-retrato-de-otono-de-un-husky.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'  },
+  { id: 8, pet: 'Dálmata', createAt: '2023-07-30', price: '520,000', stock: 7, imageUrl:'https://images.pexels.com/photos/3763311/pexels-photo-3763311.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'  },
+  { id: 9, pet: 'Pug', createAt: '2023-08-15', price: '400,000', stock: 8, imageUrl:'https://images.pexels.com/photos/3475680/pexels-photo-3475680.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'  },
+  { id: 10, pet: 'Border Collie', createAt: '2023-09-21', price: '580,000', stock: 0, imageUrl:'https://images.pexels.com/photos/3908821/pexels-photo-3908821.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'  },
 ];
 
 
@@ -41,6 +43,8 @@ export const PetsApp = () => {
     const [orderBy, setOrderBy] = useState('pet');
     const [filterName, setFilterName] = useState('')
     const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [idPetDelete, setIdPetDelete] = useState(null);
 
 
     const handleRequestSort = (event, property) => {
@@ -63,11 +67,28 @@ export const PetsApp = () => {
         setFilterName(event.target.value);
       };
 
+      const handleDelete = (id) => {
+        setOpenDeleteDialog(true)
+        setIdPetDelete(id);
+      }
+
+      const handleCancelDelete = () => {
+        setOpenDeleteDialog(false); 
+      }
+
+      const handleConfirmDelete = () => {
+        // todo: Lógica para eliminar el usuario
+        console.log('Delete user', idPetDelete);
+        setOpenDeleteDialog(false);
+        toast.success(`Mascota eliminada ${idPetDelete}`)
+      };
+
       const filteredUsers = applySortFilter(PETS_LIST, getComparator(order, orderBy), filterName, orderBy);
 
       const isNotFound = !filteredUsers.length && !!filterName;
 
   return (
+    <>
     <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={4} mt={2}>
           <Typography variant="h4" gutterBottom>
@@ -105,7 +126,7 @@ export const PetsApp = () => {
                                     <Avatar
                                         variant="rounded"
                                         alt="Urban Explorer Sneakers"
-                                        src={imageUrl ?? `https://images.pexels.com/photos/236622/pexels-photo-236622.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1`}
+                                        src={imageUrl}
                                         sx={{ width: 56, height: 56 }}
                                     />
                                     <Typography variant="subtitle2" noWrap>
@@ -142,13 +163,15 @@ export const PetsApp = () => {
                                 </TableCell>
 
                                 <TableCell align="right" >
+                                <Link href={`/dashboard/pets/edit/${id}`}>
                                 <Tooltip title="Editar">
                                     <IconButton size="small" sx={{padding:'12px'}} color="inherit" >
                                     <GrEdit ize={20} />
                                     </IconButton>
                                 </Tooltip>
+                                </Link>
                                 <Tooltip title="Eliminar">
-                                    <IconButton size="small" sx={{padding:'12px'}} color="inherit" >
+                                    <IconButton size="small" sx={{padding:'12px'}} color="inherit" onClick={()=>handleDelete(id)} >
                                     <RiDeleteBin6Fill size={20} color='red'/>
                                     </IconButton>
                                 </Tooltip>
@@ -190,5 +213,14 @@ export const PetsApp = () => {
 
         </Card>
     </Container>
+
+    <DeleteDialog
+        open={openDeleteDialog}
+        onCancel={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        subtitle='¿Estás seguro que deseas eliminar esta mascota?'
+    />
+
+    </>
   )
 }

@@ -8,11 +8,11 @@ import Label from '../../label';
 import { sentenceCase } from 'change-case';
 import { SlOptionsVertical } from "react-icons/sl";
 import { useRouter } from 'next/navigation';
-import { UserDeleteDialog } from './UserDeleteDialog';
 import toast from 'react-hot-toast';
 import ListHead from '../ui/ListHead';
 import { applySortFilter, getComparator } from '@/utils';
 import { EmptyContent } from '../ui/EmptyContent';
+import { DeleteDialog } from '../ui/DeleteDialog';
 
 // ----------------------------------------------------------------------
 
@@ -140,7 +140,9 @@ export const Userapp = () => {
         </Stack>
 
         <Card>
+        
             <UserListToolbar filterName={filterName} onFilterName={handleFilterByName} />
+
             <ScrollBar>
                 <TableContainer sx={{ minWidth: 800 }}>
                     <Table>
@@ -225,10 +227,12 @@ export const Userapp = () => {
 
     <Options open={open} handleCloseMenu={handleCloseMenu} handleEdit={handleEdit} handleDelete={handleDelete}/>
 
-    <UserDeleteDialog
+    <DeleteDialog
         open={openDeleteDialog}
         onCancel={handleCancelDelete}
         onConfirm={handleConfirmDelete}
+        subtitle='¿Estás seguro que deseas eliminar este usuario?'
+        
     />
 
     </> 
@@ -264,4 +268,6 @@ const Options = ({open, handleCloseMenu, handleEdit, handleDelete })=>{
           Eliminar
         </MenuItem>
       </Popover>
-    )}
+  )
+}
+
