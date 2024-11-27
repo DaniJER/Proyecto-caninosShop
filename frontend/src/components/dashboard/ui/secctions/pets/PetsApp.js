@@ -11,6 +11,8 @@ import { applySortFilter, getComparator } from '@/utils';
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { GrEdit } from "react-icons/gr";
 import { EmptyContent } from '../ui/EmptyContent';
+import { DeleteDialog } from '../ui/DeleteDialog';
+import toast from 'react-hot-toast';
 
 const TABLE_HEAD = [
     { id: 'pet', label: 'Mascota', alignRight: false },
@@ -41,6 +43,8 @@ export const PetsApp = () => {
     const [orderBy, setOrderBy] = useState('pet');
     const [filterName, setFilterName] = useState('')
     const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [idPetDelete, setIdPetDelete] = useState(null);
 
 
     const handleRequestSort = (event, property) => {
@@ -63,11 +67,28 @@ export const PetsApp = () => {
         setFilterName(event.target.value);
       };
 
+      const handleDelete = (id) => {
+        setOpenDeleteDialog(true)
+        setIdPetDelete(id);
+      }
+
+      const handleCancelDelete = () => {
+        setOpenDeleteDialog(false); 
+      }
+
+      const handleConfirmDelete = () => {
+        // todo: Lógica para eliminar el usuario
+        console.log('Delete user', idPetDelete);
+        setOpenDeleteDialog(false);
+        toast.success(`Mascota eliminada ${idPetDelete}`)
+      };
+
       const filteredUsers = applySortFilter(PETS_LIST, getComparator(order, orderBy), filterName, orderBy);
 
       const isNotFound = !filteredUsers.length && !!filterName;
 
   return (
+    <>
     <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={4} mt={2}>
           <Typography variant="h4" gutterBottom>
@@ -105,7 +126,7 @@ export const PetsApp = () => {
                                     <Avatar
                                         variant="rounded"
                                         alt="Urban Explorer Sneakers"
-                                        src={imageUrl ?? `https://images.pexels.com/photos/236622/pexels-photo-236622.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1`}
+                                        src={imageUrl}
                                         sx={{ width: 56, height: 56 }}
                                     />
                                     <Typography variant="subtitle2" noWrap>
@@ -142,13 +163,15 @@ export const PetsApp = () => {
                                 </TableCell>
 
                                 <TableCell align="right" >
+                                <Link href={`/dashboard/pets/edit/${id}`}>
                                 <Tooltip title="Editar">
                                     <IconButton size="small" sx={{padding:'12px'}} color="inherit" >
                                     <GrEdit ize={20} />
                                     </IconButton>
                                 </Tooltip>
+                                </Link>
                                 <Tooltip title="Eliminar">
-                                    <IconButton size="small" sx={{padding:'12px'}} color="inherit" >
+                                    <IconButton size="small" sx={{padding:'12px'}} color="inherit" onClick={()=>handleDelete(id)} >
                                     <RiDeleteBin6Fill size={20} color='red'/>
                                     </IconButton>
                                 </Tooltip>
@@ -190,5 +213,14 @@ export const PetsApp = () => {
 
         </Card>
     </Container>
+
+    <DeleteDialog
+        open={openDeleteDialog}
+        onCancel={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        subtitle='¿Estás seguro que deseas eliminar esta mascota?'
+    />
+
+    </>
   )
 }

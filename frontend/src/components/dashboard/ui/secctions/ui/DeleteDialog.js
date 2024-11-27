@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
 import React from 'react'
 
-export const UserDeleteDialog = ({ open, onCancel, onConfirm }) => {
+export const DeleteDialog = ({ open, onCancel, onConfirm, title = 'Eliminar', subtitle = '¿Estás seguro que deseas eliminarlo?' }) => {
   return (
     <Dialog
       open={open}
@@ -16,7 +16,7 @@ export const UserDeleteDialog = ({ open, onCancel, onConfirm }) => {
       }}
     >
       <DialogTitle id="delete-user-dialog-title" sx={{padding:'24px 24px 16px'}}>
-        Eliminar
+        {title}
       </DialogTitle>
       <DialogContent sx={{padding:'0px 24px'}}>
         <DialogContentText id="delete-user-dialog-description" color='#1C252E' component='font' sx={{
@@ -24,7 +24,7 @@ export const UserDeleteDialog = ({ open, onCancel, onConfirm }) => {
             color:'#1C252E',
             fontWeight:'500',
         }}>
-        ¿Estás seguro que deseas eliminar este usuario?
+        {subtitle}
         </DialogContentText>
       </DialogContent>
       <DialogActions sx={{
