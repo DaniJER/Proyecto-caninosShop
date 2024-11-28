@@ -91,4 +91,4 @@ class UserLoginSerializer(serializers.Serializer):
 class ListarUsuariosSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'userType', 'name', 'lastName', 'email', 'date_joined']  # Agrega los campos que deseas incluir
+        fields = ['id', 'username', 'userType', 'fullName', 'lastName', 'email', 'date_joined']  # Agrega los campos que deseas incluir
