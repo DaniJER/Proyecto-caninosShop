@@ -41,7 +41,7 @@ class RegistroUsuarioView(APIView):
     def post(self, request, *args, **kwargs):
         username = request.data.get("username")
         userType = request.data.get("userType", "client")  # Valor por defecto "client"
-        name = request.data.get("name")
+        fullName = request.data.get("fullName")
         lastName = request.data.get("lastName")
         email = request.data.get("email")
         password = request.data.get("password")
@@ -67,7 +67,7 @@ class RegistroUsuarioView(APIView):
                 password=password,
                 email=email,
                 userType=userType,
-                name=name,
+                fullName=fullName,
                 lastName=lastName,
             )
             

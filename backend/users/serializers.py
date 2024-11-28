@@ -10,12 +10,12 @@ from django.contrib.auth.password_validation import validate_password
 class RegistroSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True)
     userType = serializers.CharField(write_only=True, required=False)
-    name = serializers.CharField(write_only=True, required=False)
+    fullName = serializers.CharField(write_only=True, required=False)
     lastName = serializers.CharField(write_only=True, required=False)
 
     class Meta:
         model = Perfil
-        fields = ['username', 'userType', 'name', 'lastName', 'email', 'password', 'password2', ]
+        fields = ['username', 'userType', 'fullName', 'lastName', 'email', 'password', 'password2', ]
 
     def create(self, validated_data):
         password = validated_data.pop('password')
@@ -43,7 +43,7 @@ class RegistroSerializer(serializers.ModelSerializer):
         # Crear el perfil asociado
         user.email = validated_data.get('email', '' )
         user.userType = validated_data.get('userType', 'client')
-        user.name = validated_data.get('name', 'no proporcionado')
+        user.fullName = validated_data.get('fullName', 'no proporcionado')
         user.lastName = validated_data.get('lastName', 'no proporcionado')
         user.save()  # Guardamos los cambios en el perfil
 
@@ -79,7 +79,7 @@ class UserLoginSerializer(serializers.Serializer):
         try:
             user = get_user_model().objects.get(email=email)
         except get_user_model().DoesNotExist:
-            raise serializers.ValidationError("Credenciales inválidas.")
+            raise serializers.ValidationError("Credenciales inválidas. El email no está en la base de datos.")
 
         # Verifica si la contraseña es correcta
         if not user.check_password(password):
@@ -91,4 +91,10 @@ class UserLoginSerializer(serializers.Serializer):
 class ListarUsuariosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Perfil
-        fields = ['id', 'username', 'userType', 'name', 'lastName', 'email', 'date_joined']  # Agrega los campos que deseas incluir
+        fields = ['id', 'username', 'userType', 'fullName', 'lastName', 'email', 'date_joined']  # Agrega los campos que deseas incluir
+
+
+class IncorrectoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Perfil
+        fields = ['id', 'fullName', 'email']
