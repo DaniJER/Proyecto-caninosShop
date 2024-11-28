@@ -23,16 +23,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-urlpatterns = [
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-]
+from django.views.generic import TemplateView
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-
 
 class Protected(APIView):
     permission_classes = [IsAuthenticated]
@@ -40,16 +36,12 @@ class Protected(APIView):
     def get(self, request):
         return Response({"content": "This view is protected"})
 
+#ENRUTAMIENTO
 urlpatterns = [
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('admin/', admin.site.urls),
     path('api/users/', include('users.urls')),
-    path('api/', include('users.urls')),  
-
-    # Endpoint para obtener el token de acceso y refresh
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    # Endpoint para refrescar el token de acceso
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
+    path('api/', include('users.urls')), 
     path('protected/', Protected.as_view(), name='protected_view'),
-    
 ]
