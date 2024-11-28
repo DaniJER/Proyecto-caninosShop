@@ -4,7 +4,7 @@ from rest_framework import status, permissions
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from users.models import Perfil
+from users.models import User
 from ..permissions import IsAdminOrReadOnly
 from ..serializers import UserLoginSerializer, DesactivarUsuarioSerializer, ListarUsuariosSerializer
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
@@ -33,14 +33,14 @@ class LoginAPIView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#API PARA REGISTRAR USUARIOS (OPCION SOLO PARA ADMINS)
+# API PARA REGISTRAR USUARIOS (OPCION SOLO PARA ADMINS)
 class RegistroUsuarioView(APIView):
     # Permite acceso solo a usuarios administradores
     permission_classes = [IsAdminUser]
 
     def post(self, request, *args, **kwargs):
         username = request.data.get("username")
-        userType = request.data.get("userType", "client")  # Valor por defecto "client"
+        userType = request.data.get("userType", "")  # Valor por defecto "client"
         fullName = request.data.get("fullName")
         lastName = request.data.get("lastName")
         email = request.data.get("email")
@@ -52,9 +52,21 @@ class RegistroUsuarioView(APIView):
                 {"error": "Se requieren username, password y email"},
                 status=status.HTTP_400_BAD_REQUEST
             )
+        
+        if not fullName:
+            return Response(
+                {"error": "El campo 'name' (fullName) es obligatorio."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        if not lastName:
+            return Response(
+                {"error": "El campo 'lastName' es obligatorio."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         # Verificar si el correo ya existe
-        if Perfil.objects.filter(email=email).exists():
+        if User.objects.filter(email=email).exists():
             return Response(
                 {"error": "El correo electrónico ya está registrado."},
                 status=status.HTTP_400_BAD_REQUEST
@@ -62,35 +74,46 @@ class RegistroUsuarioView(APIView):
 
         try:
             # Crear el usuario con todos los datos
-            user = Perfil.objects.create_user(
+            user = User.objects.create_user(
                 username=username,
-                password=password,
-                email=email,
                 userType=userType,
                 fullName=fullName,
                 lastName=lastName,
+                email=email,
+                password=password,
             )
             
             return Response(
                 {"mensaje": f"Usuario {username} creado con éxito"},
                 status=status.HTTP_201_CREATED
             )
+        
         except IntegrityError as e:
+            # Mostrar el error completo para depurar mejor
             return Response(
-                {"error": "Error al crear el usuario. Verifica los datos proporcionados."},
+                {"error": f"Error al crear el usuario. Detalle: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+        except Exception as e:
+            # Captura otros errores generales y muestra detalles
+            return Response(
+                {"error": f"Ha ocurrido un error inesperado. Detalle: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
 #API PARA LISTAR USUARIOS
 class ListarUsuariosView(ListAPIView):
     # Permite acceso a todos los usuarios autenticados
     permission_classes = [IsAuthenticated]
-    queryset = Perfil.objects.all()
+    queryset = User.objects.all()
     serializer_class = ListarUsuariosSerializer
 
 
 #API PARA DESACTIVAR USUARIOS (OPCION SOLO PARA ADMINS)
 class DesactivarUsuarioView(RetrieveUpdateAPIView):
-    queryset = Perfil.objects.all()
+    queryset = User.objects.all()
     serializer_class = DesactivarUsuarioSerializer
     permission_classes = [IsAdminOrReadOnly]  # Aplicamos el permiso personalizado
 
@@ -98,7 +121,7 @@ class DesactivarUsuarioView(RetrieveUpdateAPIView):
 class FiltrarUsuariosView(ListAPIView):
     permission_classes = [IsAuthenticated]  # Asegúrate de que solo usuarios autenticados puedan usarlo
     serializer_class = ListarUsuariosSerializer
-    queryset = Perfil.objects.all()  # Base inicial de usuarios
+    queryset = User.objects.all()  # Base inicial de usuarios
 
     def get_queryset(self):
         """
