@@ -33,7 +33,7 @@ class User(AbstractBaseUser):
     ]
 
     # Campos básicos
-    username = models.CharField(max_length=150, unique=True)
+    username = models.CharField(max_length=150, unique=True, blank=False)
     userType = models.CharField(
         max_length=150,
         choices=USER_TYPE_CHOICES,  # Agregar las opciones
@@ -60,6 +60,12 @@ class User(AbstractBaseUser):
 
     # Campos requeridos para el superusuario
     REQUIRED_FIELDS = ['email']  # Aquí 'fullName' ya no es necesario
+
+    #USERNAME_FIELD = 'email'  # Cambia el identificador principal a 'email'
+    #REQUIRED_FIELDS = ['username']  # Especifica campos requeridos adicionales
+
+    class Meta:
+        db_table = "users_perfil"  # Apunta a la tabla existente
 
     def __str__(self):
         return self.username

@@ -40,9 +40,9 @@ class RegistroUsuarioView(APIView):
 
     def post(self, request, *args, **kwargs):
         username = request.data.get("username")
-        userType = request.data.get("userType", "none")  # Valor por defecto "client"
-        fullName = request.data.get("fullName", "").strip()  # Evitar valores vacíos o espacios
-        lastName = request.data.get("lastName", "").strip()  # Evitar valores vacíos o espacios
+        userType = request.data.get("userType", "")  # Valor por defecto "client"
+        fullName = request.data.get("fullName")
+        lastName = request.data.get("lastName")
         email = request.data.get("email")
         password = request.data.get("password")
         

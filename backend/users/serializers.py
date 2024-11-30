@@ -6,15 +6,17 @@ from django.contrib.auth import get_user_model  # Usamos get_user_model() para o
 from .models import User
 from django.contrib.auth.password_validation import validate_password
 
+User = get_user_model()  # Importa el modelo de usuario configurado en AUTH_USER_MODEL
+
 
 class RegistroSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True)
     userType = serializers.CharField(write_only=True, required=False)
-    name = serializers.CharField(write_only=True, required=False)
+    fullName = serializers.CharField(write_only=True, required=False)
     lastName = serializers.CharField(write_only=True, required=False)
 
     class Meta:
-        model = User
+        #model = User
         fields = ['username', 'userType', 'fullName', 'lastName', 'email', 'password', 'password2', ]
 
     def create(self, validated_data):
@@ -43,7 +45,7 @@ class RegistroSerializer(serializers.ModelSerializer):
         # Crear el perfil asociado
         user.email = validated_data.get('email', '' )
         user.userType = validated_data.get('userType', 'client')
-        user.name = validated_data.get('name', 'no proporcionado')
+        user.fullName = validated_data.get('fullName', 'no proporcionado')
         user.lastName = validated_data.get('lastName', 'no proporcionado')
         user.save()  # Guardamos los cambios en el perfil
 
@@ -52,7 +54,7 @@ class RegistroSerializer(serializers.ModelSerializer):
 
 class DesactivarUsuarioSerializer(serializers.ModelSerializer):
     class Meta:
-        model = get_user_model()  # Usamos el modelo de usuario personalizado
+        #model = get_user_model()  # Usamos el modelo de usuario personalizado
         fields = ['id', 'username', 'is_active']
 
     def update(self, instance, validated_data):
@@ -66,7 +68,6 @@ class DesactivarUsuarioSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
     password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
@@ -79,7 +80,7 @@ class UserLoginSerializer(serializers.Serializer):
         try:
             user = get_user_model().objects.get(email=email)
         except get_user_model().DoesNotExist:
-            raise serializers.ValidationError("Credenciales inválidas.")
+            raise serializers.ValidationError("Credenciales inválidas. El email no está en la base de datos.")
 
         # Verifica si la contraseña es correcta
         if not user.check_password(password):
@@ -90,5 +91,5 @@ class UserLoginSerializer(serializers.Serializer):
     
 class ListarUsuariosSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        #model = User
         fields = ['id', 'username', 'userType', 'fullName', 'lastName', 'email', 'date_joined']  # Agrega los campos que deseas incluir
