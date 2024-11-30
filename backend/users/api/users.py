@@ -40,7 +40,7 @@ class RegistroUsuarioView(APIView):
 
     def post(self, request, *args, **kwargs):
         username = request.data.get("username")
-        userType = request.data.get("userType", "")  # Valor por defecto "client"
+        userType = request.data.get("userType", "client")  # Valor por defecto "client"
         fullName = request.data.get("fullName")
         lastName = request.data.get("lastName")
         email = request.data.get("email")
@@ -73,7 +73,15 @@ class RegistroUsuarioView(APIView):
             )
 
         try:
-            # Crear el usuario con todos los datos
+            # Configurar campos adicionales según el tipo de usuario
+            extra_fields = {}
+            if userType == "staff":
+                extra_fields["is_staff"] = True
+            elif userType == "admin":
+                extra_fields["is_staff"] = True
+                extra_fields["is_superuser"] = True
+
+            # Crear el usuario con todos los datos y campos extra
             user = User.objects.create_user(
                 username=username,
                 userType=userType,
@@ -81,10 +89,11 @@ class RegistroUsuarioView(APIView):
                 lastName=lastName,
                 email=email,
                 password=password,
+                **extra_fields  # Pasa los valores adicionales
             )
             
             return Response(
-                {"mensaje": f"Usuario {username} creado con éxito"},
+                {"mensaje": f"Usuario {username} fue creado con éxito"},
                 status=status.HTTP_201_CREATED
             )
         
