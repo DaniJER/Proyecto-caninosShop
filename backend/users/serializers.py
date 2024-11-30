@@ -6,6 +6,8 @@ from django.contrib.auth import get_user_model  # Usamos get_user_model() para o
 from .models import User
 from django.contrib.auth.password_validation import validate_password
 
+User = get_user_model()  # Importa el modelo de usuario configurado en AUTH_USER_MODEL
+
 
 class RegistroSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True)
@@ -14,7 +16,7 @@ class RegistroSerializer(serializers.ModelSerializer):
     lastName = serializers.CharField(write_only=True, required=False)
 
     class Meta:
-        model = User
+        #model = User
         fields = ['username', 'userType', 'fullName', 'lastName', 'email', 'password', 'password2', ]
 
     def create(self, validated_data):
@@ -52,7 +54,7 @@ class RegistroSerializer(serializers.ModelSerializer):
 
 class DesactivarUsuarioSerializer(serializers.ModelSerializer):
     class Meta:
-        model = get_user_model()  # Usamos el modelo de usuario personalizado
+        #model = get_user_model()  # Usamos el modelo de usuario personalizado
         fields = ['id', 'username', 'is_active']
 
     def update(self, instance, validated_data):
@@ -65,7 +67,6 @@ class DesactivarUsuarioSerializer(serializers.ModelSerializer):
         instance.is_active = validated_data.get('is_active', instance.is_active)
         instance.save()
         return instance
-
 
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
@@ -90,5 +91,5 @@ class UserLoginSerializer(serializers.Serializer):
     
 class ListarUsuariosSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        #model = User
         fields = ['id', 'username', 'userType', 'fullName', 'lastName', 'email', 'date_joined']  # Agrega los campos que deseas incluir
