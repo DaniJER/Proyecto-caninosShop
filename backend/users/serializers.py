@@ -93,3 +93,14 @@ class ListarUsuariosSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'userType', 'fullName', 'lastName', 'email', 'date_joined']  # Agrega los campos que deseas incluir
+
+
+class FiltrarUsuariosSerializer(serializers.ModelSerializer):
+    # Incluimos los campos personalizados como campos del serializador
+    fullName = serializers.CharField(source='fullName', read_only=True)
+    lastName = serializers.CharField(source='lastName', read_only=True)
+    userType = serializers.CharField(source='userType', read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'fullName', 'lastName', 'userType']
