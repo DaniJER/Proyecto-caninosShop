@@ -16,7 +16,7 @@ class RegistroSerializer(serializers.ModelSerializer):
     lastName = serializers.CharField(write_only=True, required=False)
 
     class Meta:
-        #model = User
+        model = User
         fields = ['username', 'userType', 'fullName', 'lastName', 'email', 'password', 'password2', ]
 
     def create(self, validated_data):
@@ -54,7 +54,7 @@ class RegistroSerializer(serializers.ModelSerializer):
 
 class DesactivarUsuarioSerializer(serializers.ModelSerializer):
     class Meta:
-        #model = get_user_model()  # Usamos el modelo de usuario personalizado
+        model = get_user_model()  # Usamos el modelo de usuario personalizado
         fields = ['id', 'username', 'is_active']
 
     def update(self, instance, validated_data):
@@ -91,5 +91,16 @@ class UserLoginSerializer(serializers.Serializer):
     
 class ListarUsuariosSerializer(serializers.ModelSerializer):
     class Meta:
-        #model = User
+        model = User
         fields = ['id', 'username', 'userType', 'fullName', 'lastName', 'email', 'date_joined']  # Agrega los campos que deseas incluir
+
+
+class FiltrarUsuariosSerializer(serializers.ModelSerializer):
+    # Incluimos los campos personalizados como campos del serializador
+    fullName = serializers.CharField(source='fullName', read_only=True)
+    lastName = serializers.CharField(source='lastName', read_only=True)
+    userType = serializers.CharField(source='userType', read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'fullName', 'lastName', 'userType']

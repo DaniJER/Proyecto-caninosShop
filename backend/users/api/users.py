@@ -6,7 +6,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from users.models import User
 from ..permissions import IsAdminOrReadOnly
-from ..serializers import UserLoginSerializer, DesactivarUsuarioSerializer, ListarUsuariosSerializer
+from ..serializers import UserLoginSerializer, DesactivarUsuarioSerializer, ListarUsuariosSerializer, FiltrarUsuariosSerializer
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework import status
 from rest_framework.generics import ListAPIView
@@ -40,7 +40,7 @@ class RegistroUsuarioView(APIView):
 
     def post(self, request, *args, **kwargs):
         username = request.data.get("username")
-        userType = request.data.get("userType", "")  # Valor por defecto "client"
+        userType = request.data.get("userType", "client")  # Valor por defecto "client"
         fullName = request.data.get("fullName")
         lastName = request.data.get("lastName")
         email = request.data.get("email")
@@ -73,7 +73,15 @@ class RegistroUsuarioView(APIView):
             )
 
         try:
-            # Crear el usuario con todos los datos
+            # Configurar campos adicionales según el tipo de usuario
+            extra_fields = {}
+            if userType == "staff":
+                extra_fields["is_staff"] = True
+            elif userType == "admin":
+                extra_fields["is_staff"] = True
+                extra_fields["is_superuser"] = True
+
+            # Crear el usuario con todos los datos y campos extra
             user = User.objects.create_user(
                 username=username,
                 userType=userType,
@@ -81,10 +89,11 @@ class RegistroUsuarioView(APIView):
                 lastName=lastName,
                 email=email,
                 password=password,
+                **extra_fields  # Pasa los valores adicionales
             )
             
             return Response(
-                {"mensaje": f"Usuario {username} creado con éxito"},
+                {"mensaje": f"Usuario {username} fue creado con éxito"},
                 status=status.HTTP_201_CREATED
             )
         
@@ -119,35 +128,28 @@ class DesactivarUsuarioView(RetrieveUpdateAPIView):
 
 #API PARA FILTRAR A LOS USUARIOS 
 class FiltrarUsuariosView(ListAPIView):
-    permission_classes = [IsAuthenticated]  # Asegúrate de que solo usuarios autenticados puedan usarlo
+    permission_classes = [IsAuthenticated]
     serializer_class = ListarUsuariosSerializer
-    queryset = User.objects.all()  # Base inicial de usuarios
+    queryset = User.objects.all()
 
     def get_queryset(self):
         """
-        Personaliza el queryset según los parámetros recibidos en la petición.
+        Filtra el queryset según los parámetros de consulta proporcionados.
         """
-        queryset = super().get_queryset()
-        params = self.request.query_params  # Obtén los parámetros de la URL
+        queryset = super().get_queryset()  # Obtén el queryset base
+        params = self.request.query_params  # Parámetros de consulta de la petición
 
-        # Filtros disponibles
+        # Recupera parámetros específicos
+        user_id = params.get('id', None)
         username = params.get('username', None)
-        userType = params.get('userType', None)
-        email = params.get('email', None)
-        is_active = params.get('is_active', None)
 
-        # Aplicar filtros si están presentes
+        # Aplica filtros
+        if user_id:
+            queryset = queryset.filter(id=user_id)
         if username:
             queryset = queryset.filter(username__icontains=username)
-        if userType:
-            queryset = queryset.filter(userType=userType)
-        if email:
-            queryset = queryset.filter(email__icontains=email)
-        if is_active is not None:
-            queryset = queryset.filter(is_active=is_active.lower() == 'true')
 
-        return queryset   
-    
+        return queryset
 #VISTA PARA CERRAR SESIÓN    
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
