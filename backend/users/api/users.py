@@ -6,7 +6,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from users.models import User
 from ..permissions import IsAdminOrReadOnly
-from ..serializers import UserLoginSerializer, DesactivarUsuarioSerializer, ListarUsuariosSerializer, FiltrarUsuariosSerializer
+from ..serializers import UserLoginSerializer, DesactivarUsuarioSerializer, ListarUsuariosSerializer, FiltrarUsuariosSerializer, RegistroSerializer
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework import status
 from rest_framework.generics import ListAPIView
@@ -35,9 +35,11 @@ class LoginAPIView(APIView):
 
 # API PARA REGISTRAR USUARIOS (OPCION SOLO PARA ADMINS)
 class RegistroUsuarioView(APIView):
-    # Permite acceso solo a usuarios administradores
-    permission_classes = [IsAdminUser]
-
+    # Permite registrarse a los usuarios clientes
+    queryset = User.objects.all()
+    serializer_class = RegistroSerializer
+    permission_classes = [permissions.AllowAny]
+    
     def post(self, request, *args, **kwargs):
         username = request.data.get("username")
         userType = request.data.get("userType", "client")  # Valor por defecto "client"
